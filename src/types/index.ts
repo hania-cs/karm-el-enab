@@ -61,6 +61,26 @@ export interface Booklet {
   updated_at: string;
 }
 
+export interface SupportTicket {
+  id: string;
+  farmer_id: string;
+  subject: string;
+  status: 'open' | 'resolved' | 'pending';
+  created_at: string;
+  updated_at: string;
+  profiles?: User;
+}
+
+export interface TicketMessage {
+  id: string;
+  ticket_id: string;
+  sender_id: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+  profiles?: User;
+}
+
 export interface AuthState {
   user: User | null;
   role: 'admin' | 'farmer' | null;
