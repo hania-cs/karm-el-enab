@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { CreditCardForm } from "./CreditCardForm";
 
 const rentalSchema = z.object({
   quantity: z.number().min(1, "Quantity must be at least 1"),
@@ -32,6 +33,7 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCardValid, setIsCardValid] = useState(false);
 
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
     resolver: zodResolver(rentalSchema),
@@ -50,7 +52,19 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
       return;
     }
 
+    if (!isCardValid) {
+      toast.error("Please fill in all payment information correctly");
+      return;
+    }
+
     setIsSubmitting(true);
+    
+    // Simulate payment verification
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    toast.success("Payment information verified successfully!", {
+      description: "Your card details have been validated.",
+    });
+
     try {
       const { error } = await supabase.from("rentals").insert({
         user_id: user.id,
@@ -64,10 +78,13 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
 
       if (error) throw error;
 
-      toast.success("Rental Request Submitted – Pending Approval");
+      toast.success("Rental Request Submitted – Pending Admin Approval", {
+        description: "You will be notified when your request is reviewed.",
+      });
       reset();
       setStartDate(undefined);
       setEndDate(undefined);
+      setIsCardValid(false);
       onSuccess();
       onClose();
     } catch (error) {
@@ -82,6 +99,7 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
     reset();
     setStartDate(undefined);
     setEndDate(undefined);
+    setIsCardValid(false);
     onClose();
   };
 
@@ -190,15 +208,17 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
           </div>
         )}
 
+        <CreditCardForm onValidChange={setIsCardValid} />
+
         <div className="flex gap-3 justify-end">
           <Button type="button" variant="outline" onClick={handleClose}>
             Cancel
           </Button>
           <Button
             type="submit"
-            disabled={isSubmitting || !startDate || !endDate}
+            disabled={isSubmitting || !startDate || !endDate || !isCardValid}
           >
-            {isSubmitting ? "Submitting..." : "Submit Request"}
+            {isSubmitting ? "Processing..." : "Confirm & Submit"}
           </Button>
         </div>
       </form>

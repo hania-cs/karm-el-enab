@@ -26,6 +26,7 @@ import {
   Users,
   ClipboardList,
   Book,
+  MessageSquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -58,6 +59,7 @@ export function Navbar() {
     { href: "/admin/rentals", label: "Rentals", icon: ClipboardList },
     { href: "/admin/plots", label: "Plots", icon: LandPlot },
     { href: "/admin/booklets", label: "Booklets", icon: FileText },
+    { href: "/admin/support", label: "Support", icon: MessageSquare },
   ];
 
   const navLinks = isAuthenticated
