@@ -9,7 +9,14 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  plugins: [
+    react(),
+    // Only enable componentTagger in development, but disable its favicon
+    mode === "development" &&
+      componentTagger({
+        addFavicon: false, // this disables the lovable favicon
+      }),
+  ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
