@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import logo from "/logo.png"; // Your logo image
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,13 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import {
-  Grape,
   Menu,
   User,
   LogOut,
@@ -41,9 +38,7 @@ export function Navbar() {
     navigate("/");
   };
 
-  const publicLinks = [
-    { href: "/", label: "Home", icon: Book },
-  ];
+  const publicLinks = [{ href: "/", label: "Home", icon: Book }];
 
   const farmerLinks = [
     { href: "/farmer/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -95,12 +90,14 @@ export function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-            <Grape className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="font-heading text-xl font-bold">FarmRent</span>
+      <div className="container flex h-20 items-center justify-between"> {/* Navbar taller for bigger logo */}
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <img
+            src={logo}
+            alt="Karm Enab Logo"
+            className="h-16 w-auto object-contain" // Bigger logo, auto width
+          />
         </Link>
 
         {/* Desktop Navigation */}
@@ -108,6 +105,7 @@ export function Navbar() {
           <NavLinks />
         </nav>
 
+        {/* Auth buttons & mobile menu */}
         <div className="flex items-center gap-3">
           {isAuthenticated ? (
             <DropdownMenu>
