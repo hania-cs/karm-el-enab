@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Grape } from "lucide-react";
+import logo from "/logo.png"; // Your logo image
 
 export function Footer() {
   return (
@@ -7,12 +8,13 @@ export function Footer() {
       <div className="container py-12">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                <Grape className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <span className="font-heading text-xl font-bold">FarmRent</span>
-            </Link>
+                <Link to="/" className="flex items-center">
+                     <img
+                       src={logo}
+                       alt="Karm Enab Logo"
+                       className="h-20 w-auto object-contain" // Bigger logo, auto width
+                     />
+                   </Link>
             <p className="text-sm text-muted-foreground">
               Modern equipment rental and farm management for the modern farmer.
             </p>
