@@ -114,40 +114,52 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
       size="lg"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        <div className="p-4 rounded-lg bg-muted/50 space-y-2">
-          <h4 className="font-semibold">{equipment.name}</h4>
-          <p className="text-sm text-muted-foreground">{equipment.description}</p>
-          <p className="text-lg font-bold text-primary">
-            ${equipment.daily_rate}/day
-          </p>
+        {/* Equipment Info Card */}
+        <div className="p-5 rounded-xl bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/10 space-y-3">
+          <div className="flex items-start justify-between">
+            <div>
+              <h4 className="font-heading text-lg font-bold">{equipment.name}</h4>
+              <p className="text-sm text-muted-foreground mt-1">{equipment.description}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-2xl font-bold text-primary">
+                ${equipment.daily_rate}
+              </p>
+              <p className="text-xs text-muted-foreground">per day</p>
+            </div>
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="quantity">Quantity</Label>
+        {/* Quantity Selection */}
+        <div className="space-y-3">
+          <Label htmlFor="quantity" className="text-sm font-semibold">Quantity</Label>
           <Input
             id="quantity"
             type="number"
             min={1}
             max={equipment.quantity_available}
+            className="h-12 text-lg font-medium"
             {...register("quantity", { valueAsNumber: true })}
           />
           {errors.quantity && (
             <p className="text-sm text-destructive">{errors.quantity.message}</p>
           )}
-          <p className="text-xs text-muted-foreground">
-            {equipment.quantity_available} available
+          <p className="text-xs text-muted-foreground flex items-center gap-1">
+            <span className="inline-block w-2 h-2 rounded-full bg-success"></span>
+            {equipment.quantity_available} units available
           </p>
         </div>
 
+        {/* Date Selection */}
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label>Start Date</Label>
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold">Start Date</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "w-full h-12 justify-start text-left font-normal",
                     !startDate && "text-muted-foreground"
                   )}
                 >
@@ -167,14 +179,14 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
             </Popover>
           </div>
 
-          <div className="space-y-2">
-            <Label>End Date</Label>
+          <div className="space-y-3">
+            <Label className="text-sm font-semibold">End Date</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "w-full h-12 justify-start text-left font-normal",
                     !endDate && "text-muted-foreground"
                   )}
                 >
@@ -195,30 +207,41 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
           </div>
         </div>
 
+        {/* Total Cost Summary */}
         {days > 0 && (
-          <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
+          <div className="p-5 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
             <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">
-                {days} day{days > 1 ? "s" : ""} × ${equipment.daily_rate} × {quantity || 1}
-              </span>
-              <span className="text-xl font-bold text-primary">
-                ${totalCost.toFixed(2)}
-              </span>
+              <div className="space-y-1">
+                <p className="text-sm text-muted-foreground">Rental Summary</p>
+                <p className="text-sm font-medium">
+                  {days} day{days > 1 ? "s" : ""} × ${equipment.daily_rate} × {quantity || 1} unit{(quantity || 1) > 1 ? "s" : ""}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-muted-foreground">Total</p>
+                <p className="text-3xl font-bold text-primary">
+                  ${totalCost.toFixed(2)}
+                </p>
+              </div>
             </div>
           </div>
         )}
 
+        {/* Payment Form */}
         <CreditCardForm onValidChange={setIsCardValid} />
 
-        <div className="flex gap-3 justify-end">
-          <Button type="button" variant="outline" onClick={handleClose}>
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-4 border-t border-border/50">
+          <Button type="button" variant="outline" onClick={handleClose} className="flex-1" size="lg">
             Cancel
           </Button>
           <Button
             type="submit"
             disabled={isSubmitting || !startDate || !endDate || !isCardValid}
+            className="flex-[2]"
+            size="lg"
           >
-            {isSubmitting ? "Processing..." : "Confirm & Submit"}
+            {isSubmitting ? "Processing Payment..." : "Submit Rental Request"}
           </Button>
         </div>
       </form>
