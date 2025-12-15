@@ -86,16 +86,7 @@ export default function HomePage() {
                 performance all in one place. Built by farmers, for farmers.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
-                <Button size="xl" variant="hero" asChild>
-                  <Link to="/register" className="gap-2">
-                    Get Started Free <ArrowRight className="h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button size="xl" variant="hero-outline" asChild>
-                  <Link to="/login">Sign In to Dashboard</Link>
-                </Button>
-              </div>
+      
 
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
                 <Button
