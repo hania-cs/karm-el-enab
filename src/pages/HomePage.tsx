@@ -97,6 +97,25 @@ export default function HomePage() {
                 </Button>
               </div>
 
+              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <Button
+                  size="xl"
+                  asChild
+                  className="bg-white text-primary hover:bg-white/90"
+                >
+                  <Link to="/register" className="gap-2">
+                    Get Started Free <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  size="xl"
+                  asChild
+                  className="border border-white text-white hover:bg-white hover:text-primary"
+                >
+                  <Link to="/login">Sign In to Dashboard</Link>
+                </Button>
+              </div>
+
               {/* Trust Indicators */}
               <div className="flex flex-wrap gap-6 pt-4 animate-fade-in" style={{ animationDelay: "0.4s" }}>
                 <div className="flex items-center gap-2 text-background/80">
@@ -214,7 +233,9 @@ export default function HomePage() {
             <Button size="xl" variant="secondary" asChild>
               <Link to="/register">Create Free Account</Link>
             </Button>
-           
+            <Button size="xl" variant="hero-outline" asChild>
+              <Link to="/contact">Talk to Sales</Link>
+            </Button>
           </div>
         </div>
       </section>
