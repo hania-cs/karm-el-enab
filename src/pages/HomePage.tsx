@@ -36,7 +36,7 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      quote: "FarmRent has transformed how we manage our 200-acre vineyard. The equipment rental system alone has saved us thousands.",
+      quote: "Karm El Anab has transformed how we manage our 200-acre vineyard. The equipment rental system alone has saved us thousands.",
       author: "Maria Santos",
       role: "Vineyard Owner",
       rating: 5,
@@ -48,7 +48,7 @@ export default function HomePage() {
       rating: 5,
     },
     {
-      quote: "The community aspect is what sets FarmRent apart. I've learned so much from fellow farmers here.",
+      quote: "The community aspect is what sets Karm El Anab apart. I've learned so much from fellow farmers here.",
       author: "Ana Ferreira",
       role: "Organic Farmer",
       rating: 5,
