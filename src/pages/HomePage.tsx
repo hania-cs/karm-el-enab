@@ -1,216 +1,222 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { Booklet } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { PageLoader } from "@/components/ui/loading-spinner";
-import { Grape, Tractor, LandPlot, BookOpen, ArrowRight, Users } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Grape, Tractor, LandPlot, ArrowRight, Users, CheckCircle2, Star, Leaf } from "lucide-react";
+import heroImage from "/image.png";
 
 export default function HomePage() {
-  const [booklets, setBooklets] = useState<Booklet[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBooklets = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("booklets")
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(6);
-
-        if (error) throw error;
-        setBooklets(data as Booklet[] || []);
-      } catch (error) {
-        console.error("Error fetching booklets:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBooklets();
-  }, []);
 
   const features = [
     {
       icon: Tractor,
       title: "Equipment Rental",
-      description: "Access a wide range of modern farming equipment at competitive daily rates.",
+      description: "Access a wide range of modern farming equipment at competitive daily rates. From tractors to harvesters, we've got you covered.",
+      highlights: ["100+ Equipment Types", "Daily & Weekly Rates", "Delivery Available"],
     },
     {
       icon: LandPlot,
       title: "Plot Management",
-      description: "Track your plots, monitor income, and optimize your farm operations.",
+      description: "Track your plots, monitor income, and optimize your farm operations with our intuitive dashboard and analytics.",
+      highlights: ["Real-time Tracking", "Income Reports", "Crop Planning"],
     },
     {
       icon: Users,
       title: "Farmer Network",
-      description: "Join a community of farmers sharing resources and knowledge.",
+      description: "Join a community of over 10,000 farmers sharing resources, knowledge, and best practices across the region.",
+      highlights: ["Expert Advice", "Resource Sharing", "Local Events"],
+    },
+  ];
+
+  const stats = [
+    { value: "10,000+", label: "Active Farmers" },
+    { value: "500+", label: "Equipment Available" },
+    { value: "50,000", label: "Acres Managed" },
+    { value: "98%", label: "Satisfaction Rate" },
+  ];
+
+  const testimonials = [
+    {
+      quote: "FarmRent has transformed how we manage our 200-acre vineyard. The equipment rental system alone has saved us thousands.",
+      author: "Maria Santos",
+      role: "Vineyard Owner",
+      rating: 5,
+    },
+    {
+      quote: "Finally, a platform that understands the needs of modern farmers. The plot management tools are exceptional.",
+      author: "João Silva",
+      role: "Crop Farmer",
+      rating: 5,
+    },
+    {
+      quote: "The community aspect is what sets FarmRent apart. I've learned so much from fellow farmers here.",
+      author: "Ana Ferreira",
+      role: "Organic Farmer",
+      rating: 5,
     },
   ];
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative overflow-hidden gradient-hero py-24 lg:py-40">
-        <div className="container relative z-10">
-          <div className="mx-auto max-w-4xl text-center space-y-10">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary/10 text-primary text-sm font-semibold shadow-sm border border-primary/20 animate-fade-in">
-              <Grape className="h-4 w-4" />
-              <span>Farm Equipment & Management Platform</span>
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <img
+            src={heroImage}
+            alt="Beautiful farmland at golden hour with modern equipment"
+            className="w-full h-full object-cover"
+          />
+          <div className="hero-overlay absolute inset-0" />
+        </div>
+
+        <div className="container relative z-10 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/90 text-primary-foreground text-sm font-semibold shadow-lg animate-fade-in">
+                <Grape className="h-4 w-4" />
+                <span>Farm Equipment & Management Platform</span>
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-heading font-bold tracking-tight text-background leading-[1.1] animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                Grow Your Farm with{" "}
+                <span className="text-primary">Modern Equipment</span>
+              </h1>
+              
+              <p className="text-lg lg:text-xl text-background/90 max-w-xl leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                Rent high-quality farming equipment, manage your plots, and track your farm's 
+                performance all in one place. Built by farmers, for farmers.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                <Button size="xl" variant="hero" asChild>
+                  <Link to="/register" className="gap-2">
+                    Get Started Free <ArrowRight className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button size="xl" variant="hero-outline" asChild>
+                  <Link to="/login">Sign In to Dashboard</Link>
+                </Button>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="flex flex-wrap gap-6 pt-4 animate-fade-in" style={{ animationDelay: "0.4s" }}>
+                <div className="flex items-center gap-2 text-background/80">
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                  <span className="text-sm">No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2 text-background/80">
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                  <span className="text-sm">14-day free trial</span>
+                </div>
+                <div className="flex items-center gap-2 text-background/80">
+                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                  <span className="text-sm">Cancel anytime</span>
+                </div>
+              </div>
             </div>
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-bold tracking-tight text-balance animate-fade-in" style={{ animationDelay: "0.1s" }}>
-              Grow Your Farm with{" "}
-              <span className="text-primary relative">
-                Modern Equipment
-                <svg className="absolute -bottom-2 left-0 w-full h-3 text-primary/30" viewBox="0 0 100 10" preserveAspectRatio="none">
-                  <path d="M0 8 Q50 0 100 8" stroke="currentColor" strokeWidth="3" fill="none"/>
-                </svg>
-              </span>
-            </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in" style={{ animationDelay: "0.2s" }}>
-              Rent high-quality farming equipment, manage your plots, and track your farm's 
-              performance all in one place. Built for modern farmers.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <Button size="xl" asChild>
-                <Link to="/register" className="gap-2">
-                  Get Started Free <ArrowRight className="h-5 w-5" />
-                </Link>
-              </Button>
-              <Button size="xl" variant="outline" asChild>
-                <Link to="/login">Sign In to Dashboard</Link>
-              </Button>
+
+            <div className="hidden lg:grid grid-cols-2 gap-4 animate-fade-in" style={{ animationDelay: "0.5s" }}>
+              {stats.map((stat, index) => (
+                <div key={stat.label} className="stat-card" style={{ animationDelay: `${0.6 + index * 0.1}s` }}>
+                  <p className="text-3xl xl:text-4xl font-heading font-bold text-background">{stat.value}</p>
+                  <p className="text-background/70 text-sm mt-1">{stat.label}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
-        {/* Decorative background elements */}
-        <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-primary/15 blur-3xl animate-pulse" />
-          <div className="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-accent/15 blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full bg-primary/5 blur-3xl" />
-        </div>
-        {/* Grid pattern overlay */}
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,hsl(var(--foreground)/0.02)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--foreground)/0.02)_1px,transparent_1px)] bg-[size:4rem_4rem]" />
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-muted/30 relative overflow-hidden">
-        <div className="container relative z-10">
+      {/* Mobile Stats */}
+      <section className="lg:hidden py-12 bg-primary">
+        <div className="container grid grid-cols-2 gap-4">
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center p-4">
+              <p className="text-2xl font-heading font-bold text-primary-foreground">{stat.value}</p>
+              <p className="text-primary-foreground/70 text-sm">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="py-24 bg-background">
+        <div className="container">
           <div className="text-center mb-16">
-            <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-3">Features</p>
-            <h2 className="text-4xl lg:text-5xl font-heading font-bold mb-6">
-              Everything You Need to Manage Your Farm
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+              <Leaf className="h-4 w-4" />
+              <span>Powerful Features</span>
+            </div>
+            <h2 className="text-3xl lg:text-5xl font-heading font-bold mb-6">
+              Everything You Need to <span className="text-primary">Manage Your Farm</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Our platform provides comprehensive tools for modern farming operations.
             </p>
           </div>
+
           <div className="grid gap-8 md:grid-cols-3">
-            {features.map((feature, index) => (
-              <Card key={feature.title} className="card-hover border-0 bg-background shadow-lg group animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                <CardHeader className="pb-4">
-                  <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/10">
-                    <feature.icon className="h-7 w-7 text-primary" />
-                  </div>
+            {features.map((feature) => (
+              <Card key={feature.title} className="border-0 shadow-medium">
+                <CardHeader>
+                  <feature.icon className="h-8 w-8 text-primary mb-4" />
                   <h3 className="text-2xl font-heading font-bold">{feature.title}</h3>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
+                <CardContent className="space-y-4">
+                  <p className="text-muted-foreground">{feature.description}</p>
+                  <ul className="space-y-2">
+                    {feature.highlights.map((h) => (
+                      <li key={h} className="flex items-center gap-2 text-sm">
+                        <CheckCircle2 className="h-4 w-4 text-primary" />
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}
           </div>
         </div>
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
       </section>
 
-      {/* Booklets Section */}
-      <section className="py-20">
+      {/* Testimonials */}
+      <section className="py-24 bg-secondary/50">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-heading font-bold mb-4">
-              Resource Library
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Access guides, tips, and resources to help you succeed in farming.
-            </p>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-5xl font-heading font-bold">Trusted by Farmers</h2>
           </div>
-
-          {isLoading ? (
-            <PageLoader />
-          ) : booklets.length === 0 ? (
-            <div className="text-center py-12">
-              <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No booklets available yet.</p>
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {booklets.map((booklet) => (
-                <Card key={booklet.id} className="card-hover overflow-hidden">
-                  <CardHeader className="p-0">
-                    {booklet.photo_path ? (
-                      <img
-                        src={booklet.photo_path}
-                        alt={booklet.title}
-                        className="h-48 w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-48 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                        <BookOpen className="h-12 w-12 text-primary/40" />
-                      </div>
-                    )}
-                  </CardHeader>
-                  <CardContent className="p-5">
-                    <h3 className="font-heading text-lg font-semibold mb-2 line-clamp-1">
-                      {booklet.title}
-                    </h3>
-                    {booklet.preview_text && (
-                      <p className="text-sm text-muted-foreground line-clamp-2">
-                        {booklet.preview_text}
-                      </p>
-                    )}
-                  </CardContent>
-                  <CardFooter className="p-5 pt-0">
-                    <Button variant="outline" size="sm" asChild className="w-full">
-                      <Link to={`/booklet/${booklet.id}`}>
-                        Read More <ArrowRight className="h-4 w-4 ml-2" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
+          <div className="grid gap-8 md:grid-cols-3">
+            {testimonials.map((t) => (
+              <Card key={t.author} className="border-0 shadow-soft">
+                <CardContent className="pt-8 space-y-4">
+                  <div className="flex gap-1">
+                    {[...Array(t.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 fill-primary text-primary" />
+                    ))}
+                  </div>
+                  <p className="italic">"{t.quote}"</p>
+                  <div className="pt-4 border-t">
+                    <p className="font-semibold">{t.author}</p>
+                    <p className="text-sm text-muted-foreground">{t.role}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-primary via-primary to-grape-red-dark text-primary-foreground relative overflow-hidden">
-        <div className="container relative z-10">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <h2 className="text-4xl lg:text-5xl font-heading font-bold">
-              Ready to Modernize Your Farm?
-            </h2>
-            <p className="text-xl opacity-90 max-w-xl mx-auto">
-              Join thousands of farmers who are using FarmRent to streamline their operations and increase productivity.
-            </p>
-            <Button
-              size="xl"
-              variant="secondary"
-              asChild
-              className="bg-background text-primary hover:bg-background/90 shadow-xl"
-            >
-              <Link to="/register" className="gap-2">
-                Create Free Account <ArrowRight className="h-5 w-5" />
-              </Link>
+      {/* CTA */}
+      <section className="py-24 bg-primary text-primary-foreground text-center">
+        <div className="container space-y-6">
+          <h2 className="text-4xl lg:text-5xl font-heading font-bold">Ready to Modernize Your Farm?</h2>
+          <p className="text-xl opacity-90">Start your free trial today.</p>
+          <div className="flex justify-center gap-4">
+            <Button size="xl" variant="secondary" asChild>
+              <Link to="/register">Create Free Account</Link>
             </Button>
+           
           </div>
         </div>
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-background/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-background/5 rounded-full blur-3xl translate-x-1/2 translate-y-1/2" />
       </section>
     </div>
   );
