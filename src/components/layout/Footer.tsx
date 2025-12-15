@@ -54,7 +54,7 @@ export function Footer() {
           <div>
             <h4 className="font-heading font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>support@farmrent.com</li>
+              <li>support@karmelanab.com</li>
               <li>+1 (555) 123-4567</li>
             </ul>
           </div>
