@@ -27,7 +27,6 @@ import AdminEquipment from "./pages/admin/AdminEquipment";
 import AdminRentals from "./pages/admin/AdminRentals";
 import AdminPlots from "./pages/admin/AdminPlots";
 import AdminBooklets from "./pages/admin/AdminBooklets";
-import AdminSupport from "./pages/admin/AdminSupport";
 
 const queryClient = new QueryClient();
 
@@ -138,14 +137,6 @@ const App = () => (
                 element={
                   <ProtectedRoute requiredRole="admin">
                     <AdminBooklets />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/support"
-                element={
-                  <ProtectedRoute requiredRole="admin">
-                    <AdminSupport />
                   </ProtectedRoute>
                 }
               />

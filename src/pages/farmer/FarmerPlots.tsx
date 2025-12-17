@@ -5,36 +5,33 @@ import { Plot } from "@/types";
 import { DataTable } from "@/components/ui/data-table";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { PageLoader } from "@/components/ui/loading-spinner";
-import { Button } from "@/components/ui/button";
-import { LandPlot, Plus } from "lucide-react";
-import { PlotRequestModal } from "@/components/plots/PlotRequestModal";
+import { LandPlot } from "lucide-react";
 
 export default function FarmerPlots() {
   const { user } = useAuth();
   const [plots, setPlots] = useState<Plot[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const fetchPlots = async () => {
-    if (!user) return;
-
-    try {
-      const { data, error } = await supabase
-        .from("plots")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      setPlots(data as Plot[] || []);
-    } catch (error) {
-      console.error("Error fetching plots:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   useEffect(() => {
+    const fetchPlots = async () => {
+      if (!user) return;
+
+      try {
+        const { data, error } = await supabase
+          .from("plots")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        setPlots(data as Plot[] || []);
+      } catch (error) {
+        console.error("Error fetching plots:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchPlots();
   }, [user]);
 
@@ -63,40 +60,24 @@ export default function FarmerPlots() {
 
   return (
     <div className="container py-8 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-heading font-bold">My Plots</h1>
-          <p className="text-muted-foreground mt-1">
-            View your registered farm plots and request new ones.
-          </p>
-        </div>
-        <Button onClick={() => setIsModalOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Request New Plot
-        </Button>
+      <div>
+        <h1 className="text-3xl font-heading font-bold">My Plots</h1>
+        <p className="text-muted-foreground mt-1">
+          View your registered farm plots and their performance.
+        </p>
       </div>
 
       {plots.length === 0 ? (
         <div className="text-center py-16 border rounded-xl bg-card">
           <LandPlot className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h3 className="font-heading font-semibold mb-2">No Plots Yet</h3>
-          <p className="text-muted-foreground mb-4">
-            You don't have any plots assigned yet.
+          <p className="text-muted-foreground">
+            Contact your administrator to add plots to your account.
           </p>
-          <Button onClick={() => setIsModalOpen(true)} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Request Your First Plot
-          </Button>
         </div>
       ) : (
         <DataTable columns={columns} data={plots} />
       )}
-
-      <PlotRequestModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSuccess={fetchPlots}
-      />
     </div>
   );
 }
