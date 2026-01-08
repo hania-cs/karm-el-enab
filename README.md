@@ -1,73 +1,148 @@
-# Welcome to your Lovable project
+# 🌱 Farm Management System
 
-## Project info
+A comprehensive web application for managing agricultural operations, built with modern web technologies and a serverless architecture.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+---
 
-## How can I edit this code?
+## 🚀 Quick Start
 
-There are several ways of editing your application.
+```bash
+# Clone the repository
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+cd farm-management-system
 
-**Use Lovable**
+# Install dependencies
+npm install
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+# Create .env file with Supabase credentials
+# (See LOCAL_SETUP_GUIDE.md for details)
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open **http://localhost:5173** in your browser.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+---
 
-**Use GitHub Codespaces**
+## 📋 Documentation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+| Document | Description |
+|----------|-------------|
+| [LOCAL_SETUP_GUIDE.md](./LOCAL_SETUP_GUIDE.md) | Step-by-step instructions for running locally |
+| [PROJECT_REPORT.md](./PROJECT_REPORT.md) | Academic report for project presentation |
+| [TECHNICAL_DOCUMENTATION.md](./TECHNICAL_DOCUMENTATION.md) | Detailed technical reference |
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## ✨ Features
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### For Farmers
+- 📊 **Dashboard** - Overview of plots, rentals, and activities
+- 🌾 **Plot Management** - Track agricultural plots and income
+- 🚜 **Equipment Rental** - Browse and request equipment
+- 📚 **Educational Booklets** - Access farming resources
+- 💬 **Support Tickets** - Communicate with administrators
 
-## How can I deploy this project?
+### For Administrators
+- 👥 **User Management** - Approve and manage farmer accounts
+- 📋 **Plot Oversight** - Manage all plots and requests
+- 🔧 **Equipment Management** - Add, edit, and track equipment
+- 📑 **Rental Approvals** - Review and approve rental requests
+- 📖 **Content Management** - Create and manage booklets
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 🛠️ Technology Stack
 
-Yes, you can!
+| Category | Technologies |
+|----------|-------------|
+| **Frontend** | React 18, TypeScript, Vite |
+| **Styling** | Tailwind CSS, shadcn/ui |
+| **State Management** | React Query, React Context |
+| **Backend** | Supabase (PostgreSQL, Auth, RLS) |
+| **Forms** | React Hook Form, Zod |
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## 📁 Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── equipment/       # Equipment-related components
+│   ├── layout/          # Layout components (Navbar, Footer)
+│   └── ui/              # shadcn/ui components
+├── contexts/            # React contexts (Auth)
+├── hooks/               # Custom React hooks
+├── integrations/        # Supabase client setup
+├── pages/               # Page components
+│   ├── admin/           # Admin dashboard pages
+│   └── farmer/          # Farmer dashboard pages
+└── types/               # TypeScript type definitions
+```
+
+---
+
+## 🔐 User Roles
+
+| Role | Access Level |
+|------|-------------|
+| **Farmer** | Personal dashboard, plots, equipment rentals, booklets |
+| **Admin** | Full system access, user management, approvals |
+
+---
+
+## 📱 Pages Overview
+
+| Page | Route | Access |
+|------|-------|--------|
+| Home | `/` | Public |
+| Login | `/login` | Public |
+| Register | `/register` | Public |
+| Farmer Dashboard | `/farmer` | Farmer |
+| Farmer Plots | `/farmer/plots` | Farmer |
+| Farmer Equipment | `/farmer/equipment` | Farmer |
+| Farmer Rentals | `/farmer/rentals` | Farmer |
+| Admin Dashboard | `/admin` | Admin |
+| Admin Users | `/admin/users` | Admin |
+| Admin Plots | `/admin/plots` | Admin |
+| Admin Equipment | `/admin/equipment` | Admin |
+| Admin Rentals | `/admin/rentals` | Admin |
+| Admin Booklets | `/admin/booklets` | Admin |
+
+---
+
+## 🗄️ Database Tables
+
+- `profiles` - User profile information
+- `user_roles` - Role assignments (farmer/admin)
+- `plots` - Agricultural plot data
+- `equipment` - Rental equipment inventory
+- `rentals` - Equipment rental records
+- `booklets` - Educational content
+- `support_tickets` - Support requests
+- `ticket_messages` - Ticket conversations
+- `plot_requests` - New plot requests
+
+---
+
+## 🔧 Development Commands
+
+| Command | Description |
+|---------|-------------|
+| `npm install` | Install dependencies |
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+
+---
+
+## 📄 License
+
+This project was created as a senior project for educational purposes.
+
+---
+
+**Version:** 1.0.0  
+**Last Updated:** January 2025
