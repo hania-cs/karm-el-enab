@@ -1,10 +1,37 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Grape, Tractor, LandPlot, ArrowRight, Users, CheckCircle2, Star, Leaf } from "lucide-react";
+import { Grape, Tractor, LandPlot, ArrowRight, Users, CheckCircle2, Star, Leaf, BookOpen, Calendar } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { Booklet } from "@/types";
+import { format } from "date-fns";
 import heroImage from "/image.png";
 
 export default function HomePage() {
+  const [booklets, setBooklets] = useState<Booklet[]>([]);
+  const [isLoadingBooklets, setIsLoadingBooklets] = useState(true);
+
+  useEffect(() => {
+    const fetchBooklets = async () => {
+      try {
+        const { data, error } = await supabase
+          .from("booklets")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(3);
+        
+        if (error) throw error;
+        setBooklets(data as Booklet[]);
+      } catch (error) {
+        console.error("Error fetching booklets:", error);
+      } finally {
+        setIsLoadingBooklets(false);
+      }
+    };
+
+    fetchBooklets();
+  }, []);
 
   const features = [
     {
@@ -86,8 +113,6 @@ export default function HomePage() {
                 performance all in one place. Built by farmers, for farmers.
               </p>
               
-      
-
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in" style={{ animationDelay: "0.3s" }}>
                 <Button
                   size="xl"
@@ -185,6 +210,76 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Booklets Section */}
+      <section className="py-24 bg-secondary/30">
+        <div className="container">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+              <BookOpen className="h-4 w-4" />
+              <span>Latest Resources</span>
+            </div>
+            <h2 className="text-3xl lg:text-5xl font-heading font-bold mb-6">
+              Farming <span className="text-primary">Guides & Resources</span>
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Explore our collection of expert guides, tips, and insights to help you optimize your farming operations.
+            </p>
+          </div>
+
+          {isLoadingBooklets ? (
+            <div className="text-center py-12">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+            </div>
+          ) : booklets.length > 0 ? (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {booklets.map((booklet) => (
+                <Link to={`/booklet/${booklet.id}`} key={booklet.id}>
+                  <Card className="border-0 shadow-medium hover:shadow-lg transition-shadow duration-300 h-full group">
+                    {booklet.photo_path && (
+                      <div className="overflow-hidden rounded-t-lg">
+                        <img
+                          src={booklet.photo_path}
+                          alt={booklet.title}
+                          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    )}
+                    <CardContent className="pt-6 space-y-3">
+                      <h3 className="text-xl font-heading font-bold group-hover:text-primary transition-colors">
+                        {booklet.title}
+                      </h3>
+                      {booklet.content_text && (
+                        <p className="text-muted-foreground line-clamp-3">
+                          {booklet.content_text}
+                        </p>
+                      )}
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground pt-2">
+                        <Calendar className="h-4 w-4" />
+                        <span>{format(new Date(booklet.created_at), "MMMM d, yyyy")}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No booklets available yet. Check back soon!</p>
+            </div>
+          )}
+
+          {booklets.length > 0 && (
+            <div className="text-center mt-12">
+              <Button variant="outline" size="lg" asChild>
+                <Link to="/booklets" className="gap-2">
+                  View All Resources <ArrowRight className="h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
