@@ -20,6 +20,7 @@ export interface Equipment {
   description?: string;
   daily_rate: number;
   quantity_available: number;
+  is_rented: boolean;  // Add this line
   image_url?: string;
   created_at: string;
   updated_at: string;

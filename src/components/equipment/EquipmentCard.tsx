@@ -17,7 +17,7 @@ export function EquipmentCard({
   showRentButton = true,
   className,
 }: EquipmentCardProps) {
-  const isAvailable = equipment.quantity_available > 0;
+  const isAvailable = equipment.quantity_available > 0 && !equipment.is_rented;
 
   return (
     <Card className={cn("card-hover overflow-hidden", className)}>
@@ -40,7 +40,7 @@ export function EquipmentCard({
                 : "bg-destructive/10 text-destructive"
             )}
           >
-            {isAvailable ? "Available" : "Out of Stock"}
+            {isAvailable ? "Available" : equipment.is_rented ? "Rented" : "Out of Stock"}
           </div>
         </div>
       </CardHeader>
@@ -70,9 +70,14 @@ export function EquipmentCard({
           <Button
             onClick={() => onRent?.(equipment)}
             disabled={!isAvailable}
-            className="w-full"
+            className={cn(
+              "w-full",
+              isAvailable
+                ? "bg-green-600 hover:bg-green-700 text-white"
+                : "bg-red-600 hover:bg-red-600 text-white cursor-not-allowed opacity-60"
+            )}
           >
-            {isAvailable ? "Rent Now" : "Not Available"}
+            {isAvailable ? "Rent Now" : equipment.is_rented ? "Currently Rented" : "Not Available"}
           </Button>
         </CardFooter>
       )}

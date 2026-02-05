@@ -27,6 +27,7 @@ CREATE TABLE public.equipment (
   description TEXT,
   daily_rate DECIMAL(10,2) NOT NULL,
   quantity_available INTEGER NOT NULL DEFAULT 0,
+  is_rented BOOLEAN DEFAULT false,
   image_url TEXT,
   created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
-import { format, differenceInDays } from "date-fns";
+import { format, differenceInDays, parseISO, isWithinInterval } from "date-fns";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -27,11 +27,18 @@ interface RentalFormProps {
   onSuccess: () => void;
 }
 
+interface ExistingRental {
+  start_date: string;
+  end_date: string;
+  status: string;
+}
+
 export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormProps) {
   const { user } = useAuth();
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [existingRentals, setExistingRentals] = useState<ExistingRental[]>([]);
 
   const { register, handleSubmit, formState: { errors }, reset, watch } = useForm({
     resolver: zodResolver(rentalSchema),
@@ -42,11 +49,62 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
   const days = startDate && endDate ? differenceInDays(endDate, startDate) + 1 : 0;
   const totalCost = equipment ? days * equipment.daily_rate * (quantity || 1) : 0;
 
+  // Fetch existing rentals for this equipment
+  useEffect(() => {
+    const fetchExistingRentals = async () => {
+      if (!equipment) return;
+
+      const { data, error } = await supabase
+        .from("rentals")
+        .select("start_date, end_date, status")
+        .eq("equipment_id", equipment.id)
+        .in("status", ["pending", "approved"]);
+
+      if (!error && data) {
+        setExistingRentals(data);
+      }
+    };
+
+    if (open && equipment) {
+      fetchExistingRentals();
+    }
+  }, [equipment, open]);
+
+  // Check if a date is blocked by existing rentals
+  const isDateBlocked = (date: Date) => {
+    return existingRentals.some((rental) => {
+      const rentalStart = parseISO(rental.start_date);
+      const rentalEnd = parseISO(rental.end_date);
+      
+      return isWithinInterval(date, {
+        start: rentalStart,
+        end: rentalEnd,
+      });
+    });
+  };
+
+  // Check if date range overlaps with existing rentals
+  const hasDateOverlap = (start: Date, end: Date) => {
+    return existingRentals.some((rental) => {
+      const rentalStart = parseISO(rental.start_date);
+      const rentalEnd = parseISO(rental.end_date);
+      
+      // Check if ranges overlap
+      return start <= rentalEnd && end >= rentalStart;
+    });
+  };
+
   const onSubmit = async (data: { quantity: number }) => {
     if (!equipment || !user || !startDate || !endDate) return;
 
     if (data.quantity > equipment.quantity_available) {
       toast.error(`Only ${equipment.quantity_available} units available`);
+      return;
+    }
+
+    // Check for date overlap before submitting
+    if (hasDateOverlap(startDate, endDate)) {
+      toast.error("Selected dates overlap with existing rental. Please choose different dates.");
       return;
     }
 
@@ -82,6 +140,7 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
     reset();
     setStartDate(undefined);
     setEndDate(undefined);
+    setExistingRentals([]);
     onClose();
   };
 
@@ -142,7 +201,7 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
                   mode="single"
                   selected={startDate}
                   onSelect={setStartDate}
-                  disabled={(date) => date < new Date()}
+                  disabled={(date) => date < new Date() || isDateBlocked(date)}
                   initialFocus
                 />
               </PopoverContent>
@@ -169,13 +228,21 @@ export function RentalForm({ equipment, open, onClose, onSuccess }: RentalFormPr
                   mode="single"
                   selected={endDate}
                   onSelect={setEndDate}
-                  disabled={(date) => date < (startDate || new Date())}
+                  disabled={(date) => date < (startDate || new Date()) || isDateBlocked(date)}
                   initialFocus
                 />
               </PopoverContent>
             </Popover>
           </div>
         </div>
+
+        {existingRentals.length > 0 && (
+          <div className="p-3 rounded-lg bg-yellow-50 border border-yellow-200">
+            <p className="text-xs text-yellow-800">
+              ⚠️ Some dates are unavailable due to existing rentals. Blocked dates are disabled in the calendar.
+            </p>
+          </div>
+        )}
 
         {days > 0 && (
           <div className="p-4 rounded-lg bg-primary/5 border border-primary/20">
